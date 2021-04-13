@@ -23,15 +23,17 @@ with open('generated_csv/pr-list.csv', mode='w') as csv_file:
     fieldnames = ['PR No.', 'Title', 'Created', 'State']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writeheader()
+    rows = []
     for pr in pulls:
         if pr.created_at > start_date and pr.created_at < end_date:
             print("PR#" + str(pr.number) + \
             " Title: " + pr.title + " Created: " + \
             pr.created_at.strftime("%d %B, %Y, %H:%M:%S") + " state: " + pr.state)
-            sheet_instance.append_row([str(pr.number), pr.title, pr.created_at.strftime("%d %B, %Y, %H:%M:%S"), pr.state])
+            rows.append([str(pr.number), pr.title, pr.created_at.strftime("%d %B, %Y, %H:%M:%S"), pr.state])
             writer.writerow({
                 'PR No.': str(pr.number),
                 'Title': pr.title,
                 'Created': pr.created_at.strftime("%d %B, %Y, %H:%M:%S"),
                 'State': pr.state
             })
+    sheet_instance.append_rows(rows)
