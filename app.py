@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime, timedelta
 import gspread
+import calendar
 import csv
 import os
 
@@ -11,8 +12,18 @@ scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/aut
 creds = ServiceAccountCredentials.from_json_keyfile_name('github_sheets.json', scope)
 client = gspread.authorize(creds)
 sheet = client.open('github_data')
-sheet_instance = sheet.get_worksheet(0)
-
+# sheet_instance = sheet.get_worksheet(0)
+sheet_instance = ''
+worksheet_list = sheet.worksheets()
+sheets = []
+for sht in worksheet_list:
+    sheets.append(sht.title)
+current_month = calendar.month_name[datetime.now().month]
+filename = ''
+if current_month in sheets:
+    sheet_instance = sheet.worksheet(current_month)
+else:
+    sheet_instance = sheet.add_worksheet(title=current_month, rows="3000", cols="10")
 g = Github(os.getenv('GITHUB_TOKEN'))
 repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
 
