@@ -18,7 +18,7 @@ worksheet_list = sheet.worksheets()
 sheets = []
 for sht in worksheet_list:
     sheets.append(sht.title)
-current_month = calendar.month_name[datetime.now().month]
+current_month = calendar.month_name[datetime.now().month-1]
 filename = ''
 if current_month in sheets:
     sheet_instance = sheet.worksheet(current_month)
